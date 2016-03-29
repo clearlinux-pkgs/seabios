@@ -1,0 +1,2 @@
+add-install-rule.patch
+seabios-add-E820-PRAM-type.patch

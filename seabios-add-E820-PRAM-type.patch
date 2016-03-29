@@ -1,0 +1,54 @@
+From efee6819254c12004bc25d386022548781c7c30c Mon Sep 17 00:00:00 2001
+From: Haozhong Zhang <haozhong.zhang@intel.com>
+Date: Thu, 25 Feb 2016 21:59:20 +0800
+Subject: [PATCH] E820: add new E820_PRAM type (type-12)
+
+Signed-off-by: Haozhong Zhang <haozhong.zhang@intel.com>
+---
+ src/e820map.c     | 1 +
+ src/e820map.h     | 1 +
+ src/fw/paravirt.c | 4 ++++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/src/e820map.c b/src/e820map.c
+index 39445cf..4a26d53 100644
+--- a/src/e820map.c
++++ b/src/e820map.c
+@@ -54,6 +54,7 @@ e820_type_name(u32 type)
+     case E820_ACPI:     return "ACPI";
+     case E820_NVS:      return "NVS";
+     case E820_UNUSABLE: return "UNUSABLE";
++    case E820_PRAM:     return "PMEM (Legacy)";
+     default:            return "UNKNOWN";
+     }
+ }
+diff --git a/src/e820map.h b/src/e820map.h
+index de8b523..8cddaaa 100644
+--- a/src/e820map.h
++++ b/src/e820map.h
+@@ -8,6 +8,7 @@
+ #define E820_ACPI         3
+ #define E820_NVS          4
+ #define E820_UNUSABLE     5
++#define E820_PRAM         12
+ 
+ struct e820entry {
+     u64 start;
+diff --git a/src/fw/paravirt.c b/src/fw/paravirt.c
+index 8ed4380..ac9e8d6 100644
+--- a/src/fw/paravirt.c
++++ b/src/fw/paravirt.c
+@@ -356,6 +356,10 @@ qemu_cfg_e820(void)
+                 }
+                 /* fall through */
+             case E820_RESERVED:
++            case E820_PRAM:
++                if (table[i].type == E820_PRAM)
++                    dprintf(1, "Legacy PMEM: addr 0x%016llx len 0x%016llx [e820]\n",
++                            table[i].address, table[i].length);
+                 e820_add(table[i].address, table[i].length, table[i].type);
+                 break;
+             default:
+-- 
+2.7.2
+

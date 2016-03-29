@@ -1,0 +1,12 @@
+diff --git a/Makefile b/Makefile
+index b0eb239..eb7ed88 100644
+--- a/Makefile
++++ b/Makefile
+@@ -282,3 +282,7 @@ distclean: clean
+ 	$(Q)rm -f .config .config.old
+ 
+ -include $(patsubst %,$(OUT)%/*.d,$(DIRS))
++
++install:
++	mkdir -p $(PREFIX)/usr/share/seabios/
++	install -m0444 $(OUT)/bios.bin $(PREFIX)/usr/share/seabios/
